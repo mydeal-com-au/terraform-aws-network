@@ -24,15 +24,15 @@ resource "aws_network_acl_rule" "in_private_from_world_tcp_return" {
 }
 
 resource "aws_network_acl_rule" "out_private_to_world_tcp" {
-  count          = length(var.public_nacl_outbound_tcp_ports)
+  count          = length(var.private_nacl_outbound_tcp_ports)
   network_acl_id = aws_network_acl.private.id
   rule_number    = count.index + 1
   egress         = true
   protocol       = "tcp"
   rule_action    = "allow"
   cidr_block     = "0.0.0.0/0"
-  from_port      = var.public_nacl_outbound_tcp_ports[count.index]
-  to_port        = tonumber(var.public_nacl_outbound_tcp_ports[count.index]) == 0 ? "65535" : var.public_nacl_outbound_tcp_ports[count.index]
+  from_port      = lookup(var.private_nacl_outbound_tcp_ports[count.index], "from_port", null)
+  to_port        = lookup(var.private_nacl_outbound_tcp_ports[count.index], "to_port", null)
 }
 
 resource "aws_network_acl_rule" "in_private_from_world_udp_return" {
@@ -47,19 +47,19 @@ resource "aws_network_acl_rule" "in_private_from_world_udp_return" {
 }
 
 resource "aws_network_acl_rule" "out_private_to_world_udp" {
-  count          = length(var.public_nacl_outbound_udp_ports)
+  count          = length(var.private_nacl_outbound_udp_ports)
   network_acl_id = aws_network_acl.private.id
   rule_number    = count.index + 101
   egress         = true
   protocol       = "udp"
   rule_action    = "allow"
   cidr_block     = "0.0.0.0/0"
-  from_port      = var.public_nacl_outbound_udp_ports[count.index]
-  to_port        = tonumber(var.public_nacl_outbound_udp_ports[count.index]) == 0 ? "65535" : var.public_nacl_outbound_udp_ports[count.index]
+  from_port      = lookup(var.private_nacl_outbound_udp_ports[count.index], "from_port", null)
+  to_port        = lookup(var.private_nacl_outbound_udp_ports[count.index], "to_port", null)
 }
 
 resource "aws_network_acl_rule" "in_private_from_world_icmp_reply" {
-  count          = var.public_nacl_icmp ? 1 : 0
+  count          = var.private_nacl_icmp ? 1 : 0
   network_acl_id = aws_network_acl.private.id
   rule_number    = "201"
   egress         = false
@@ -71,7 +71,7 @@ resource "aws_network_acl_rule" "in_private_from_world_icmp_reply" {
 }
 
 resource "aws_network_acl_rule" "out_private_from_world_icmp" {
-  count          = var.public_nacl_icmp ? 1 : 0
+  count          = var.private_nacl_icmp ? 1 : 0
   network_acl_id = aws_network_acl.private.id
   rule_number    = "201"
   egress         = true

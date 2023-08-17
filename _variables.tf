@@ -68,33 +68,83 @@ variable "transit_subnet" {
 }
 
 variable "public_nacl_inbound_tcp_ports" {
-  type        = list(string)
-  default     = ["80", "443", "22", "1194"]
+  type = list(map(string))
+  default = [
+    {
+      from_port = 80
+      to_port   = 80
+    },
+    {
+      from_port = 443
+      to_port   = 443
+    },
+    {
+      from_port = 22
+      to_port   = 22
+    },
+    {
+      from_port = 1194
+      to_port   = 1194
+    }
+  ]
   description = "TCP Ports to allow inbound on public subnet via NACLs (this list cannot be empty)"
 }
 
 variable "public_nacl_outbound_tcp_ports" {
-  type        = list(string)
-  default     = ["0"]
+  type = list(map(string))
+  default = [
+    {
+      from_port = 0
+      to_port   = 65535
+    }
+  ]
   description = "TCP Ports to allow outbound to external services (use [0] to allow all ports)"
 }
 
+variable "private_nacl_outbound_tcp_ports" {
+  type = list(map(string))
+  default = [
+    {
+      from_port = 0
+      to_port   = 65535
+    }
+  ]
+  description = "TCP Ports to allow outbound to external services (use default value to allow all ports)"
+}
+
 variable "public_nacl_inbound_udp_ports" {
-  type        = list(string)
+  type        = list(map(string))
   default     = []
   description = "UDP Ports to allow inbound on public subnet via NACLs (this list cannot be empty)"
 }
 
 variable "public_nacl_outbound_udp_ports" {
-  type        = list(string)
-  default     = ["0"]
+  type        = list(map(string))
+  default     = []
   description = "UDP Ports to allow outbound to external services (use [0] to allow all ports)"
+}
+
+variable "private_nacl_outbound_udp_ports" {
+  type = list(map(string))
+  default = [
+    {
+      from_port = 0
+      to_port   = 65535
+    }
+  ]
+  description = "UDP Ports to allow outbound to external services (use default value to allow all ports)"
 }
 
 variable "public_nacl_icmp" {
   type        = bool
   default     = true
   description = "Allows ICMP traffic to and from the public subnet"
+}
+
+variable "private_nacl_icmp" {
+  type        = bool
+  default     = true
+  description = "Allows ICMP traffic to and from the private subnet"
 }
 
 variable "transit_nacl_inbound_tcp_ports" {
