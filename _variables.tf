@@ -127,6 +127,12 @@ variable "private_nacl_outbound_tcp_ports" {
   description = "TCP Ports to allow outbound to external services (use default value to allow all ports)"
 }
 
+variable "db_sql_server_port" {
+  type = number
+  default = 1433
+  description = "TCP Port for SQL Server (default is 1433)"
+}
+
 variable "public_nacl_inbound_udp_ports" {
   type        = list(map(string))
   default     = []
@@ -160,6 +166,12 @@ variable "private_nacl_icmp" {
   type        = bool
   default     = true
   description = "Allows ICMP traffic to and from the private subnet"
+}
+
+variable "db_nacl_icmp" {
+  type        = bool
+  default     = true
+  description = "Allows ICMP traffic to and from the db subnet"
 }
 
 variable "transit_nacl_inbound_tcp_ports" {
