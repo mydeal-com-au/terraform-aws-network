@@ -65,7 +65,7 @@ resource "aws_route" "db_nat_route" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "db" {
-  count           = var.vpc_endpoint_s3_gateway ? 1 : 0
+  count           = var.db_subnet && var.vpc_endpoint_s3_gateway ? 1 : 0
   route_table_id  = aws_route_table.db[0].id
   vpc_endpoint_id = aws_vpc_endpoint.s3[0].id
 }
