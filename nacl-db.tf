@@ -73,6 +73,18 @@ resource "aws_network_acl_rule" "in_db_from_world_icmp_reply" {
   icmp_code      = -1
 }
 
+resource "aws_network_acl_rule" "in_db_from_world_icmp_unreachable" {
+  count          = var.db_subnet && var.db_nacl_icmp ? 1 : 0
+  network_acl_id = aws_network_acl.db[0].id
+  rule_number    = "202"
+  egress         = false
+  protocol       = "icmp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  icmp_type      = 3 # destination unreachable
+  icmp_code      = 4 # fragmentation needed and DF set
+}
+
 resource "aws_network_acl_rule" "out_db_to_world_icmp" {
   count          = var.db_subnet && var.db_nacl_icmp ? 1 : 0
   network_acl_id = aws_network_acl.db[0].id
@@ -83,6 +95,18 @@ resource "aws_network_acl_rule" "out_db_to_world_icmp" {
   cidr_block     = "0.0.0.0/0"
   icmp_type      = 8 # echo
   icmp_code      = -1
+}
+
+resource "aws_network_acl_rule" "out_db_to_world_icmp_unreachable" {
+  count          = var.db_subnet && var.db_nacl_icmp ? 1 : 0
+  network_acl_id = aws_network_acl.db[0].id
+  rule_number    = "202"
+  egress         = true
+  protocol       = "icmp"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+  icmp_type      = 3 # destination unreachable
+  icmp_code      = 4 # fragmentation needed and DF set
 }
 
 resource "aws_network_acl_rule" "in_db_from_db" {    
@@ -113,6 +137,18 @@ resource "aws_network_acl_rule" "out_db_to_world_tcp" {
   protocol       = "tcp"
   from_port      = "443"
   to_port        = "443"
+  rule_action    = "allow"
+  cidr_block     = "0.0.0.0/0"
+}
+
+resource "aws_network_acl_rule" "out_db_to_world_tcp_80" {
+  count          = var.db_subnet ? 1 : 0
+  network_acl_id = aws_network_acl.db[0].id
+  rule_number    = count.index + 402
+  egress         = true
+  protocol       = "tcp"
+  from_port      = "80"
+  to_port        = "80"
   rule_action    = "allow"
   cidr_block     = "0.0.0.0/0"
 }
