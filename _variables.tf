@@ -36,6 +36,11 @@ variable "newbits" {
   description = "Number of bits to add to the vpc cidr when building subnets"
 }
 
+variable "newbits_db" {
+  default     = 8
+  description = "Number of bits to add to the vpc cidr when building DB subnets"
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
@@ -59,12 +64,22 @@ variable "secure_netnum_offset" {
 
 variable "transit_netnum_offset" {
   default     = 15
-  description = "Start with this subnet for secure ones, plus number of AZs"
+  description = "Start with this subnet for transit ones, plus number of AZs"
+}
+
+variable "db_netnum_offset" {
+  default     = 128
+  description = "Start with this subnet for DB ones, plus number of AZs"
 }
 
 variable "transit_subnet" {
   default     = false
   description = "Create a transit subnet for VPC peering (only central account)"
+}
+
+variable "db_subnet" {
+  default     = false
+  description = "Create a DB subnet for running stateful workloads"
 }
 
 variable "public_nacl_inbound_tcp_ports" {
