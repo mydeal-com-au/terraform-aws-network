@@ -109,7 +109,7 @@ resource "aws_network_acl_rule" "out_db_to_world_tcp" {
   count          = var.db_subnet ? 1 : 0
   network_acl_id = aws_network_acl.db[0].id
   rule_number    = count.index + 401
-  egress         = false
+  egress         = true
   protocol       = "tcp"
   from_port      = "443"
   to_port        = "443"
