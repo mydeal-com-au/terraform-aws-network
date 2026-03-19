@@ -50,20 +50,6 @@ resource "aws_route_table_association" "db" {
   }
 }
 
-resource "aws_route" "db_nat_route" {
-  count = var.db_subnet && var.nat ? 1 : 0
-
-  route_table_id         = aws_route_table.db[0].id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat_gw[0].id
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  depends_on = [aws_nat_gateway.nat_gw]
-}
-
 resource "aws_vpc_endpoint_route_table_association" "db" {
   count           = var.db_subnet && var.vpc_endpoint_s3_gateway ? 1 : 0
   route_table_id  = aws_route_table.db[0].id
