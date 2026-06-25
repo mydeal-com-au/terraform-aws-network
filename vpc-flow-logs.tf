@@ -2,8 +2,12 @@ resource "aws_flow_log" "vpc" {
   count           = var.vpc_flow_logs ? 1 : 0
   iam_role_arn    = aws_iam_role.vpc_flow_logs[0].arn
   log_destination = aws_cloudwatch_log_group.vpc_flow_logs[0].arn
-  traffic_type    = "ALL"
+  traffic_type    = var.vpc_flow_logs_type
   vpc_id          = aws_vpc.default.id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_cloudwatch_log_group" "vpc_flow_logs" {

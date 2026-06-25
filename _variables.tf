@@ -191,6 +191,15 @@ variable "vpc_flow_logs" {
   description = "Enable or disable VPC Flow Logs"
 }
 
+variable "vpc_flow_logs_type" {
+  default     = "REJECT"
+  description = "Type of VPC Flow Logs (e.g., ALL, ACCEPT, REJECT)"
+  validation {
+    condition     = contains(["ALL", "ACCEPT", "REJECT"], var.vpc_flow_logs_type)
+    error_message = "vpc_flow_logs_type must be one of: ALL, ACCEPT, REJECT"
+  }
+}
+
 variable "vpc_flow_logs_retention" {
   default     = 365
   description = "Retention in days for VPC Flow Logs CloudWatch Log Group"
