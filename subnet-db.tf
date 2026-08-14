@@ -18,7 +18,7 @@ resource "aws_subnet" "db" {
       "Scheme"              = "db"
       "EnvName"             = var.name
       "aws-cdk:subnet-name" = "DB"
-      "aws-cdk:subnet-type" = "DB"
+      "aws-cdk:subnet-type" = "Isolated"
     },
     local.kubernetes_clusters,
     length(var.kubernetes_clusters) != 0 ? { "kubernetes.io/role/internal-elb" = 1 } : {}
